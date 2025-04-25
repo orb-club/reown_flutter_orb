@@ -255,7 +255,9 @@ class ReownAppKitModal
 
   T _getSingleton<T extends Object>() => GetIt.I<T>();
 
-  FutureOr _unregisterSingleton<T extends Object>() => GetIt.I.unregister<T>();
+  FutureOr _unregisterSingleton<T extends Object>() => GetIt.I.unregister<T>(
+        ignoreReferenceCount: true,
+      );
 
   IMagicService get _magicService => _getSingleton<IMagicService>();
   ICoinbaseService get _coinbaseService => _getSingleton<ICoinbaseService>();
