@@ -196,16 +196,16 @@ class ReownAppKitModal
     _setOptionalNamespaces(optionalNamespaces);
 
     _registerSingleton<IUriService>(
-      () => UriService(core: _appKit.core),
+      UriService(core: _appKit.core),
     );
     _registerSingleton<IAnalyticsService>(
-      () => AnalyticsService(
+      AnalyticsService(
         core: _appKit.core,
         enableAnalytics: enableAnalytics,
       ),
     );
     _registerSingleton<IExplorerService>(
-      () => ExplorerService(
+      ExplorerService(
         core: _appKit.core,
         referer: _appKit.metadata.name.replaceAll(' ', ''),
         featuredWalletIds: featuredWalletIds,
@@ -214,35 +214,35 @@ class ReownAppKitModal
         namespaces: {..._requiredNamespaces, ..._optionalNamespaces},
       ),
     );
-    _registerSingleton<INetworkService>(() => NetworkService());
-    _registerSingleton<IToastService>(() => ToastService());
+    _registerSingleton<INetworkService>(NetworkService());
+    _registerSingleton<IToastService>(ToastService());
     _registerSingleton<IBlockChainService>(
-      () => BlockChainService(
+      BlockChainService(
         core: _appKit.core,
       ),
     );
     _registerSingleton<IMagicService>(
-      () => MagicService(
+      MagicService(
         core: _appKit.core,
         metadata: _appKit.metadata,
         featuresConfig: this.featuresConfig,
       ),
     );
     _registerSingleton<ICoinbaseService>(
-      () => CoinbaseService(
+      CoinbaseService(
         core: _appKit.core,
         metadata: _appKit.metadata,
         enabled: _initializeCoinbaseSDK,
       ),
     );
     _registerSingleton<IPhantomService>(
-      () => PhantomService(
+      PhantomService(
         core: _appKit.core,
         metadata: _appKit.metadata,
       ),
     );
     _registerSingleton<ISiweService>(
-      () => SiweService(
+      SiweService(
         appKit: _appKit,
         siweConfig: siweConfig,
         namespaces: {..._requiredNamespaces, ..._optionalNamespaces},
@@ -250,14 +250,12 @@ class ReownAppKitModal
     );
   }
 
-  T _registerSingleton<T extends Object>(T Function() factoryFunc) =>
-      GetIt.I.registerSingletonIfAbsent<T>(factoryFunc);
+  T _registerSingleton<T extends Object>(T instance) =>
+      GetIt.I.registerSingleton<T>(instance);
 
   T _getSingleton<T extends Object>() => GetIt.I<T>();
 
-  FutureOr _unregisterSingleton<T extends Object>() => GetIt.I.unregister<T>(
-        ignoreReferenceCount: true,
-      );
+  FutureOr _unregisterSingleton<T extends Object>() => GetIt.I.unregister<T>();
 
   IMagicService get _magicService => _getSingleton<IMagicService>();
   ICoinbaseService get _coinbaseService => _getSingleton<ICoinbaseService>();
