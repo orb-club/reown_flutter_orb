@@ -1420,25 +1420,31 @@ class ReownAppKitModal
 
   @override
   Future<void> dispose() async {
-    if (_status == ReownAppKitModalStatus.initialized) {
+    try {
       _unregisterListeners();
-      if (_disconnectOnDispose) {
-        try {
-          await expirePreviousInactivePairings();
-          await disconnect();
-          await _appKit.core.relayClient.disconnect();
-          _relayConnected = false;
-          _isConnected = false;
-          _selectedChainID = null;
-          _requiredNamespaces = {};
-          _optionalNamespaces = {};
-          _lastChainEmitted = null;
-          _supportsOneClickAuth = false;
-          _status = ReownAppKitModalStatus.idle;
-        } catch (e) {
-          _appKit.core.logger.e('[$runtimeType] disconnectOnDispose $e');
-        }
+    } catch (e) {
+      _appKit.core.logger.e('[$runtimeType] dispose _unregisterListeners $e');
+    }
+
+    if (_disconnectOnDispose) {
+      try {
+        await expirePreviousInactivePairings();
+        await disconnect();
+        await _appKit.core.relayClient.disconnect();
+        _relayConnected = false;
+        _isConnected = false;
+        _selectedChainID = null;
+        _requiredNamespaces = {};
+        _optionalNamespaces = {};
+        _lastChainEmitted = null;
+        _supportsOneClickAuth = false;
+        _status = ReownAppKitModalStatus.idle;
+      } catch (e) {
+        _appKit.core.logger.e('[$runtimeType] disconnectOnDispose $e');
       }
+    }
+
+    try {
       _unregisterSingleton<IUriService>();
       _unregisterSingleton<IAnalyticsService>();
       _unregisterSingleton<IExplorerService>();
@@ -1451,7 +1457,10 @@ class ReownAppKitModal
       _unregisterSingleton<ISiweService>();
       await Future.delayed(Duration(milliseconds: 500));
       _notify();
+    } catch (e) {
+      _appKit.core.logger.e('[$runtimeType] dispose _unregisterSingleton $e');
     }
+
     _isDisposed = true;
     super.dispose();
   }
