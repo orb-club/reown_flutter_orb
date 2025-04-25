@@ -255,7 +255,7 @@ class ReownAppKitModal
 
   T _getSingleton<T extends Object>() => GetIt.I<T>();
 
-  FutureOr _unregisterSingleton<T extends Object>() => GetIt.I.unregister<T>();
+  Future<void> _unregisterAllSingletons() => GetIt.I.reset();
 
   IMagicService get _magicService => _getSingleton<IMagicService>();
   ICoinbaseService get _coinbaseService => _getSingleton<ICoinbaseService>();
@@ -1445,16 +1445,7 @@ class ReownAppKitModal
     }
 
     try {
-      _unregisterSingleton<IUriService>();
-      _unregisterSingleton<IAnalyticsService>();
-      _unregisterSingleton<IExplorerService>();
-      _unregisterSingleton<INetworkService>();
-      _unregisterSingleton<IToastService>();
-      _unregisterSingleton<IBlockChainService>();
-      _unregisterSingleton<IMagicService>();
-      _unregisterSingleton<ICoinbaseService>();
-      _unregisterSingleton<IPhantomService>();
-      _unregisterSingleton<ISiweService>();
+      await _unregisterAllSingletons();
       await Future.delayed(Duration(milliseconds: 500));
       _notify();
     } catch (e) {
